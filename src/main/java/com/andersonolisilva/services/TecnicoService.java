@@ -4,11 +4,15 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.PessimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 
+import com.andersonolisilva.domains.Pessoa;
 import com.andersonolisilva.domains.Tecnico;
 import com.andersonolisilva.domains.dtos.TecnicoDTO;
+import com.andersonolisilva.repositories.PessoaRepository;
 import com.andersonolisilva.repositories.TecnicoRepository;
+import com.andersonolisilva.services.exceptions.DataIntegrityViolationException;
 import com.andersonolisilva.services.exceptions.ObjectNotFoundException;
 
 @Service
@@ -16,6 +20,8 @@ public class TecnicoService {
     
     @Autowired
     private TecnicoRepository repository;
+    @Autowired
+    private PessoaRepository pessoaRepository;
 
     public Tecnico findById(Integer id){
         Optional<Tecnico> obj = repository.findById(id);
@@ -28,8 +34,21 @@ public class TecnicoService {
 
     public Tecnico create(TecnicoDTO objDTO) {
         objDTO.setId(null);
+        validaCpfEEmail(objDTO);
         Tecnico newObj = new Tecnico(objDTO);
         return repository.save(newObj);
+    }
+
+    private void validaCpfEEmail(TecnicoDTO objDTO) {
+        Optional<Pessoa> obj = pessoaRepository.findByCpf(objDTO.getCpf());
+        if(obj.isPresent() && obj.get().getId() != objDTO.getId()){
+            throw new DataIntegrityViolationException("CPF já cadastrado no sistema!");
+        }
+
+        obj = pessoaRepository.findByEmail(objDTO.getEmail());
+        if(obj.isPresent() && obj.get().getId() != objDTO.getId()){
+            throw new DataIntegrityViolationException("Email já cadastrado no sistema!");
+        }
     }
 
 }
