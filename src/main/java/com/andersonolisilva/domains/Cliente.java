@@ -2,10 +2,12 @@ package com.andersonolisilva.domains;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 
+import com.andersonolisilva.domains.dtos.ClienteDTO;
 import com.andersonolisilva.domains.enums.Perfil;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -28,6 +30,17 @@ public class Cliente extends Pessoa {
         addPerfil(Perfil.CLIENTE);
     }
     
+    public Cliente(ClienteDTO objDTO) {
+        super();
+        this.id = objDTO.getId();
+        this.nome = objDTO.getNome();
+        this.cpf = objDTO.getCpf();
+        this.email = objDTO.getEmail();
+        this.senha = objDTO.getSenha();
+        this.perfis = objDTO.getPerfis().stream().map( x -> x.getCodigo()).collect(Collectors.toSet());
+        this.dataCriacao = objDTO.getDataCriacao();
+    }
+
     public List<Chamado> getChamados(){
         return chamados;
     }
