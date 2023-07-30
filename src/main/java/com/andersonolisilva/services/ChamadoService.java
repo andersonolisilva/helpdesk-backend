@@ -1,7 +1,10 @@
 package com.andersonolisilva.services;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -48,6 +51,10 @@ public class ChamadoService {
             chamado.setId(obj.getId());
         }
 
+        if(obj.getStatus().equals(Status.ENCERRADO.getCodigo())){
+            chamado.setDataFechamento(LocalDate.now());
+        }
+
         chamado.setTecnico(tecnico);
         chamado.setCliente(cliente);
         chamado.setPrioridade(Prioridade.toEnum(obj.getPrioridade()));
@@ -55,5 +62,12 @@ public class ChamadoService {
         chamado.setTitulo(obj.getTitulo());
         chamado.setObservacoes(obj.getObservacoes());
         return chamado;
+    }
+
+    public Chamado update(Integer id, @Valid ChamadoDTO objDTO){
+        objDTO.setId(id);
+        Chamado oldObj = findById(id);
+        oldObj = newChamado(objDTO);
+        return repository.save(oldObj);
     }
 }
