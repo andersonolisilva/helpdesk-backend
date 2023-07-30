@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import com.andersonolisilva.domains.dtos.ChamadoDTO;
 import com.andersonolisilva.domains.enums.Prioridade;
 import com.andersonolisilva.domains.enums.Status;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -54,6 +55,10 @@ public class Chamado implements Serializable{
         this.observacoes = observacoes;
         this.tecnico = tecnico;
         this.cliente = cliente;
+    }
+
+    public Chamado(ChamadoDTO objDTO){
+        super();        
     }
 
     public Integer getId() {
