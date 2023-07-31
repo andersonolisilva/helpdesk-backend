@@ -9,14 +9,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.andersonolisilva.domains.Pessoa;
 import com.andersonolisilva.domains.Cliente;
+import com.andersonolisilva.domains.Pessoa;
 import com.andersonolisilva.domains.dtos.ClienteDTO;
-import com.andersonolisilva.repositories.PessoaRepository;
 import com.andersonolisilva.repositories.ClienteRepository;
+import com.andersonolisilva.repositories.PessoaRepository;
 import com.andersonolisilva.services.exceptions.DataIntegrityViolationException;
 import com.andersonolisilva.services.exceptions.ObjectNotFoundException;
-import com.fasterxml.jackson.databind.deser.impl.ObjectIdReader;
 
 @Service
 public class ClienteService {
