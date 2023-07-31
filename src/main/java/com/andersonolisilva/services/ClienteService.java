@@ -6,6 +6,7 @@ import java.util.Optional;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.andersonolisilva.domains.Pessoa;
@@ -15,6 +16,7 @@ import com.andersonolisilva.repositories.PessoaRepository;
 import com.andersonolisilva.repositories.ClienteRepository;
 import com.andersonolisilva.services.exceptions.DataIntegrityViolationException;
 import com.andersonolisilva.services.exceptions.ObjectNotFoundException;
+import com.fasterxml.jackson.databind.deser.impl.ObjectIdReader;
 
 @Service
 public class ClienteService {
@@ -23,6 +25,8 @@ public class ClienteService {
     private ClienteRepository repository;
     @Autowired
     private PessoaRepository pessoaRepository;
+    @Autowired
+	private BCryptPasswordEncoder encoder;
 
     public Cliente findById(Integer id){
         Optional<Cliente> obj = repository.findById(id);
@@ -35,6 +39,7 @@ public class ClienteService {
 
     public Cliente create(ClienteDTO objDTO) {
         objDTO.setId(null);
+        objDTO.setSenha(encoder.encode(objDTO.getSenha()));
         validaCpfEEmail(objDTO);
         Cliente newObj = new Cliente(objDTO);
         return repository.save(newObj);
